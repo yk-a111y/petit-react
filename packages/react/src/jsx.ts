@@ -58,4 +58,4 @@ export const jsx = (
   return ReactElement(type, key, ref, props);
 };
 
-const jsxDev = jsx;
+export const jsxDev = jsx;
