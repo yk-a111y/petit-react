@@ -2,7 +2,7 @@ import { Key, Props, Ref } from 'shared/ReactTypes';
 import { WorkTag } from './workTags';
 import { Flags, NoFlags } from './fiberFlags';
 // *tsconfig中配置的动态路径，因为不同宿主环境，Container的类型不一样
-import { Container } from 'hostConfig'; 
+import { Container } from 'hostConfig';
 
 export class FiberNode {
   // instance attr
@@ -19,8 +19,8 @@ export class FiberNode {
   index: number;
 
   // working unit attr
-  pendingProps: Props;
-  memoizedProps: Props | null;
+  pendingProps: Props; // *当前fiber的props
+  memoizedProps: Props | null; // *pendingProps处理后，赋值给memoizedProps
   memorizedState: any;
   alternate: FiberNode | null;
 
@@ -54,7 +54,7 @@ export class FiberRootNode {
   container: Container;
   current: FiberNode;
   finishedWork: FiberNode | null; // *保存已经完成整个递归流程的hostRootFiber
-  
+
   constructor(container: Container, hostRootFiber: FiberNode) {
     this.container = container;
 
@@ -70,11 +70,11 @@ export const createWorkInProgress = (
   current: FiberNode,
   pendingProps: Props
 ): FiberNode => {
-  let wip = current.alternate
+  let wip = current.alternate;
 
   if (wip === null) {
     // mount,首屏渲染
-    wip = new FiberNode(current.tag, current.pendingProps, current.key)
+    wip = new FiberNode(current.tag, current.pendingProps, current.key);
     wip.stateNode = current.stateNode;
 
     wip.alternate = current;
@@ -94,4 +94,4 @@ export const createWorkInProgress = (
   wip.memorizedState = current.memorizedState;
 
   return wip;
-}
+};
