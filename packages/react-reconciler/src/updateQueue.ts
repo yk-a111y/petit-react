@@ -16,6 +16,7 @@ export const createUpdate = <State>(action: Action<State>) => {
   }
 }
 
+// * 创建updateQueue
 export const createUpdateQueue = <State>() => {
   return {
     shared: {
@@ -24,10 +25,12 @@ export const createUpdateQueue = <State>() => {
   } as UpdateQueue<State>;
 }
 
+// * 入队
 export const enqueueUpdate = <State>(updateQueue: UpdateQueue<State>, update: Update<State>) => {
   updateQueue.shared.pending = update;
 }
 
+// * 消费updateQueue中的update
 export const processUpdateQueue = <State>(baseState: State, pendingUpdate: Update<State> | null): {
   memoizedState: State;
 } => {

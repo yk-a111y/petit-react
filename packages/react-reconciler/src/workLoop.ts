@@ -40,6 +40,7 @@ export function renderRoot(root: FiberRootNode) {
   do {
     try {
       workLoop();
+      break;
     } catch (e) {
       if (__DEV__) {
         console.log('workLoop error: ', e);
@@ -47,6 +48,31 @@ export function renderRoot(root: FiberRootNode) {
       workInProgress = null;
     }
   } while (true);
+
+  const finishedWork = root.current.alternate;
+  root.finishedWork = finishedWork;
+
+  // *wip的fiberNode树中的flags，执行副作用
+  commitRoot(root);
+}
+
+function commitRoot(root: FiberRootNode) {
+  const finishedWork = root.finishedWork;
+  if (finishedWork === null) {
+    return;
+  }
+
+  if (__DEV__) {
+    console.warn('commit阶段开始', finishedWork);
+  }
+
+  // *reset
+  root.finishedWork = null;
+
+  // 3 sub-phase
+  // *before mutation
+  // *mutation => Placement
+  // *layout
 }
 
 function workLoop() {

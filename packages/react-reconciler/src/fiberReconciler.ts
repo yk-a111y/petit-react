@@ -17,7 +17,7 @@ export function createContainer(container: Container) {
   return root;
 }
 
-// *render方法内部执行updateContainer
+// *render方法内部执行updateContainer, element为ReactElement | null
 export function updateContainer(element: ReactElement | null, root: FiberRootNode) {
   const hostRootFiber = root.current;
   const update = createUpdate<ReactElement | null>(element);

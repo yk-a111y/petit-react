@@ -26,6 +26,7 @@ export class FiberNode {
 
   // effects
   flags: Flags;
+  subtreeFlags: Flags;
   updateQueue: unknown;
 
   constructor(tag: WorkTag, pendingProps: Props, key: Key) {
@@ -46,6 +47,7 @@ export class FiberNode {
     this.alternate = null;
 
     this.flags = NoFlags;
+    this.subtreeFlags = NoFlags;
     this.updateQueue = null;
   }
 }
@@ -85,6 +87,7 @@ export const createWorkInProgress = (
 
     // clean up effects
     wip.flags = NoFlags;
+    wip.subtreeFlags = NoFlags;
   }
 
   wip.type = current.type;
