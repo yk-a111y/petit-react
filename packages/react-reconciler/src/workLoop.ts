@@ -2,6 +2,8 @@ import { createWorkInProgress, FiberNode, FiberRootNode } from './fiber';
 import { beginWork } from './beginWork';
 import { completeWork } from './completeWork';
 import { HostRoot } from './workTags';
+import { MutationMask, NoFlags } from './fiberFlags';
+import { commitMutationEffects } from './commitWork';
 
 let workInProgress: FiberNode | null = null;
 
@@ -52,7 +54,7 @@ export function renderRoot(root: FiberRootNode) {
   const finishedWork = root.current.alternate;
   root.finishedWork = finishedWork;
 
-  // *wip的fiberNode树中的flags，执行副作用
+  // *获取wip的fiberNode树中的flags，执行副作用
   commitRoot(root);
 }
 
@@ -69,10 +71,19 @@ function commitRoot(root: FiberRootNode) {
   // *reset
   root.finishedWork = null;
 
-  // 3 sub-phase
-  // *before mutation
-  // *mutation => Placement
-  // *layout
+  // *判断是否存在副作用
+  const subtreeHasEffect = (finishedWork.subtreeFlags & MutationMask) !== NoFlags;
+  const rootHasEffect = (finishedWork.flags & MutationMask) !== NoFlags;
+  // *3 sub-phase
+  if (subtreeHasEffect || rootHasEffect) {
+    // *before mutation 
+    // *mutation => Placement
+    commitMutationEffects(finishedWork);
+    root.current = finishedWork; // 改变current fiber树的指向，至finishedWork fiber树（即WIP树）
+    // *layout
+  } else {
+    root.current = finishedWork; // 没有更新，也需要改变fiber树指向
+  }
 }
 
 function workLoop() {
