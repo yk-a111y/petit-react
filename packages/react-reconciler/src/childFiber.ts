@@ -1,6 +1,6 @@
-import { ReactElement } from "shared/ReactTypes";
-import { FiberNode } from "./fiber";
-import { REACT_ELEMENT_TYPE } from "shared/ReactSymbols";
+import { ReactElement } from 'shared/ReactTypes';
+import { FiberNode } from './fiber';
+import { REACT_ELEMENT_TYPE } from 'shared/ReactSymbols';
 
 // * mount阶段存在大量插入节点的操作，即Placement，故不追踪副作用；对根节点执行1次Placement即可
 function childReconciler(shouldTrackSideEffects: boolean) {
@@ -13,7 +13,7 @@ function childReconciler(shouldTrackSideEffects: boolean) {
     if (typeof newChild === 'object' && newChild !== null) {
       switch (newChild.$$typeof) {
         case REACT_ELEMENT_TYPE:
-          return reconcileSingleElement(returnFiber, currentFirstChild, newChild);
+        // return reconcileSingleElement(returnFiber, currentFirstChild, newChild);
         default:
           if (__DEV__) {
             console.log('未实现的reconcile类型：', newChild);
@@ -26,7 +26,7 @@ function childReconciler(shouldTrackSideEffects: boolean) {
 
     // * 文本节点情况 HostText
     if (typeof newChild === 'string' || typeof newChild === 'number') {
-      return reconcileSingleTextNode(returnFiber, currentFirstChild, newChild);
+      // return reconcileSingleTextNode(returnFiber, currentFirstChild, newChild);
     }
 
     if (__DEV__) {
@@ -34,7 +34,7 @@ function childReconciler(shouldTrackSideEffects: boolean) {
     }
 
     return null;
-  }
+  };
 }
 
 export const reconcileChildFibers = childReconciler(true);

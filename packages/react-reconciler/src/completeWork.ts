@@ -1,5 +1,10 @@
 import { FiberNode } from './fiber';
-import { createInstance, createTextInstance, appendInitialChild } from './hostConfig';
+import {
+  Container,
+  createInstance,
+  createTextInstance,
+  appendInitialChild,
+} from 'hostConfig';
 import { HostComponent, HostRoot, HostText } from './workTags';
 import { NoFlags } from './fiberFlags';
 
@@ -43,7 +48,7 @@ export const completeWork = (wip: FiberNode) => {
   }
 };
 
-function appendAllChildren(parent: FiberNode, wip: FiberNode) {
+function appendAllChildren(parent: Container, wip: FiberNode) {
   let node = wip.child;
 
   while (node !== null) {
@@ -57,7 +62,7 @@ function appendAllChildren(parent: FiberNode, wip: FiberNode) {
     if (node === wip) {
       return;
     }
-    
+
     // *递归中的归
     while (node.sibling === null) {
       if (node.return === null || node.return === wip) {
