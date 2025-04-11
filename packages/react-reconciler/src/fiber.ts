@@ -1,5 +1,5 @@
-import { Key, Props, Ref } from 'shared/ReactTypes';
-import { WorkTag } from './workTags';
+import { Key, Props, Ref, ReactElement } from 'shared/ReactTypes';
+import { FunctionComponent, HostComponent, WorkTag } from './workTags';
 import { Flags, NoFlags } from './fiberFlags';
 // *tsconfig中配置的动态路径，因为不同宿主环境，Container的类型不一样
 import { Container } from 'hostConfig';
@@ -98,3 +98,22 @@ export const createWorkInProgress = (
 
   return wip;
 };
+
+export function createFiberFromElement(element: ReactElement): FiberNode {
+  const { type, key, props } = element;
+  let fiberTag: WorkTag = FunctionComponent;
+
+  if (typeof type === 'string') {
+    // <div>
+    fiberTag = HostComponent;
+  } else if (typeof type === 'function') {
+    fiberTag = FunctionComponent;
+  } else if (__DEV__) {
+    console.warn('未实现的type类型', element);
+  }
+
+  const fiber = new FiberNode(fiberTag, props, key);
+  fiber.type = type;
+
+  return fiber;
+}

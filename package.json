@@ -36,6 +36,14 @@
     "typescript-eslint": "^8.25.0"
   },
   "dependencies": {
-    "create-react-app": "^5.1.0"
+    "create-react-app": "^5.1.0",
+    "react": "link:../../../.pnpm/global/5/node_modules/react",
+    "react-dom": "link:../../../.pnpm/global/5/node_modules/react-dom"
+  },
+  "pnpm": {
+    "overrides": {
+      "react": "link:../../../.pnpm/global/5/node_modules/react",
+      "react-dom": "link:../../../.pnpm/global/5/node_modules/react-dom"
+    }
   }
 }
