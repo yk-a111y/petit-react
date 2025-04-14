@@ -1,17 +1,17 @@
-import { ReactElement } from 'shared/ReactTypes';
+import { ReactElementType } from 'shared/ReactTypes';
 import { REACT_ELEMENT_TYPE } from 'shared/ReactSymbols';
 import { createFiberFromElement, FiberNode } from './fiber';
 import { HostText } from './workTags';
+import { Placement } from './fiberFlags';
 
 // * mount阶段存在大量插入节点的操作，即Placement，故不追踪副作用；对根节点执行1次Placement即可
 function childReconciler(shouldTrackSideEffects: boolean) {
   function reconcileSingleElement(
     returnFiber: FiberNode,
     currentFiber: FiberNode | null,
-    element: ReactElement
+    element: ReactElementType
   ) {
     // *根据element创建fiber
-    console.log('🚀 ~ reconcileSingleElement ~ returnFiber:', returnFiber);
     const fiber = createFiberFromElement(element);
     fiber.return = returnFiber;
 
@@ -29,23 +29,31 @@ function childReconciler(shouldTrackSideEffects: boolean) {
     return fiber;
   }
 
+  function placeSingleChild(fiber: FiberNode) {
+    if (shouldTrackSideEffects && fiber.alternate === null) {
+      fiber.flags |= Placement;
+    }
+
+    return fiber;
+  }
+
   return function reconcileChildFibers(
     returnFiber: FiberNode,
     currentFirstChild: FiberNode | null,
-    newChild?: ReactElement
+    newChild?: ReactElementType
   ) {
     // * 判断当前fiber的类型
     if (typeof newChild === 'object' && newChild !== null) {
       switch (newChild.$$typeof) {
         case REACT_ELEMENT_TYPE:
-          return reconcileSingleElement(
-            returnFiber,
-            currentFirstChild,
-            newChild
+          const fiber = placeSingleChild(
+            reconcileSingleElement(returnFiber, currentFirstChild, newChild)
           );
+
+          return fiber;
         default:
           if (__DEV__) {
-            console.log('未实现的reconcile类型：', newChild);
+            console.warn('未实现的reconcile类型:', newChild);
           }
           return null;
       }
@@ -55,11 +63,15 @@ function childReconciler(shouldTrackSideEffects: boolean) {
 
     // * 文本节点情况 HostText
     if (typeof newChild === 'string' || typeof newChild === 'number') {
-      return reconcileSingleTextNode(returnFiber, currentFirstChild, newChild);
+      const fiber = placeSingleChild(
+        reconcileSingleTextNode(returnFiber, currentFirstChild, newChild)
+      );
+
+      return fiber;
     }
 
     if (__DEV__) {
-      console.log('未实现的reconcile类型：', newChild);
+      console.warn('未实现的reconcile类型:', newChild);
     }
 
     return null;

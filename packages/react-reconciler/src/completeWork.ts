@@ -39,12 +39,14 @@ export const completeWork = (wip: FiberNode) => {
       bubbleProperties(wip);
       return null;
     case HostRoot:
+      bubbleProperties(wip);
       return null;
     default:
       if (__DEV__) {
         console.warn('未处理的completeWork情况', wip);
       }
-      return null;
+
+      break;
   }
 };
 
@@ -89,5 +91,5 @@ function bubbleProperties(wip: FiberNode) {
   }
 
   // *将subtreeFlags赋值给wip树
-  wip.subtreeFlags = subtreeFlags;
+  wip.subtreeFlags |= subtreeFlags;
 }

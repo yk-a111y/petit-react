@@ -1,4 +1,4 @@
-import { ReactElement } from 'shared/ReactTypes';
+import { ReactElementType } from 'shared/ReactTypes';
 import { Container } from 'hostConfig';
 import { FiberNode, FiberRootNode } from './fiber';
 import {
@@ -24,15 +24,15 @@ export function createContainer(container: Container) {
 
 // *render方法内部执行updateContainer, element为ReactElement | null
 export function updateContainer(
-  element: ReactElement | null,
+  element: ReactElementType | null,
   root: FiberRootNode
 ) {
   const hostRootFiber = root.current;
-  console.log('🚀 ~ hostRootFiber:', hostRootFiber);
-  const update = createUpdate<ReactElement | null>(element);
+
+  const update = createUpdate<ReactElementType | null>(element);
 
   enqueueUpdate(
-    hostRootFiber.updateQueue as UpdateQueue<ReactElement | null>,
+    hostRootFiber.updateQueue as UpdateQueue<ReactElementType | null>,
     update
   );
 

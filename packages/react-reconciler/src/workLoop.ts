@@ -60,6 +60,7 @@ export function renderRoot(root: FiberRootNode) {
 
 function commitRoot(root: FiberRootNode) {
   const finishedWork = root.finishedWork;
+
   if (finishedWork === null) {
     return;
   }
@@ -72,11 +73,13 @@ function commitRoot(root: FiberRootNode) {
   root.finishedWork = null;
 
   // *判断是否存在副作用
-  const subtreeHasEffect = (finishedWork.subtreeFlags & MutationMask) !== NoFlags;
+  const subtreeHasEffect =
+    (finishedWork.subtreeFlags & MutationMask) !== NoFlags;
   const rootHasEffect = (finishedWork.flags & MutationMask) !== NoFlags;
+
   // *3 sub-phase
   if (subtreeHasEffect || rootHasEffect) {
-    // *before mutation 
+    // *before mutation
     // *mutation => Placement
     commitMutationEffects(finishedWork);
     root.current = finishedWork; // 改变current fiber树的指向，至finishedWork fiber树（即WIP树）
@@ -107,6 +110,7 @@ function performUnitOfWork(fiber: FiberNode) {
 
 function completeUnitOfWork(fiber: FiberNode) {
   let node: FiberNode | null = fiber;
+
   do {
     completeWork(node);
     const sibling = node.sibling;
@@ -119,5 +123,8 @@ function completeUnitOfWork(fiber: FiberNode) {
 
     // *没有兄弟节点，则返回到父节点
     node = node.return;
+
+    // ! 这里需要将workInProgress指向父节点，否则会陷入死循环
+    workInProgress = node;
   } while (node !== null);
 }

@@ -1,4 +1,4 @@
-import { Key, Props, Ref, ReactElement } from 'shared/ReactTypes';
+import { Key, Props, ReactElementType, Ref } from 'shared/ReactTypes';
 import { FunctionComponent, HostComponent, WorkTag } from './workTags';
 import { Flags, NoFlags } from './fiberFlags';
 // *tsconfig中配置的动态路径，因为不同宿主环境，Container的类型不一样
@@ -21,7 +21,7 @@ export class FiberNode {
   // working unit attr
   pendingProps: Props; // *当前fiber的props
   memoizedProps: Props | null; // *pendingProps处理后，赋值给memoizedProps
-  memorizedState: any;
+  memoizedState: any;
   alternate: FiberNode | null;
 
   // effects
@@ -43,7 +43,7 @@ export class FiberNode {
 
     this.pendingProps = pendingProps;
     this.memoizedProps = null;
-    this.memorizedState = null;
+    this.memoizedState = null;
     this.alternate = null;
 
     this.flags = NoFlags;
@@ -76,7 +76,7 @@ export const createWorkInProgress = (
 
   if (wip === null) {
     // mount,首屏渲染
-    wip = new FiberNode(current.tag, current.pendingProps, current.key);
+    wip = new FiberNode(current.tag, pendingProps, current.key);
     wip.stateNode = current.stateNode;
 
     wip.alternate = current;
@@ -94,12 +94,12 @@ export const createWorkInProgress = (
   wip.updateQueue = current.updateQueue;
   wip.child = current.child;
   wip.memoizedProps = current.memoizedProps;
-  wip.memorizedState = current.memorizedState;
+  wip.memoizedState = current.memoizedState;
 
   return wip;
 };
 
-export function createFiberFromElement(element: ReactElement): FiberNode {
+export function createFiberFromElement(element: ReactElementType): FiberNode {
   const { type, key, props } = element;
   let fiberTag: WorkTag = FunctionComponent;
 

@@ -2,10 +2,9 @@ export type Container = Element;
 export type Instance = Element;
 
 export const createInstance = (type: string, props: any): Instance => {
-  console.log('🚀 ~ createInstance ~ props:', props);
   // TODO: 处理props
-  const instance = document.createElement(type);
-  return instance;
+  const element = document.createElement(type);
+  return element;
 };
 
 export const appendInitialChild = (
