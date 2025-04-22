@@ -75,14 +75,14 @@ export const createWorkInProgress = (
   let wip = current.alternate;
 
   if (wip === null) {
-    // mount,首屏渲染
+    // mount,首屏渲染,创建全新的wip
     wip = new FiberNode(current.tag, pendingProps, current.key);
     wip.stateNode = current.stateNode;
 
     wip.alternate = current;
     current.alternate = wip;
   } else {
-    // update
+    // update,更新已有的wip，并清除副作用
     wip.pendingProps = pendingProps;
 
     // clean up effects

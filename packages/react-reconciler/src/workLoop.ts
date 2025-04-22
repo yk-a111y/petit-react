@@ -13,7 +13,7 @@ function prepareFreshStack(root: FiberRootNode) {
 
 // *调度功能
 export function scheduleUpdateOnFiber(fiber: FiberNode) {
-  // *get fiberRootNode
+  // *Get fiberRootNode
   const root = markUpdateFromFiberToRoot(fiber);
   renderRoot(root);
 }
@@ -36,7 +36,7 @@ function markUpdateFromFiberToRoot(fiber: FiberNode) {
 }
 
 export function renderRoot(root: FiberRootNode) {
-  // *init
+  // *init workInProgress
   prepareFreshStack(root);
 
   do {

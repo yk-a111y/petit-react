@@ -1,8 +1,14 @@
 import { ReactElementType } from 'shared/ReactTypes';
 import { FiberNode } from './fiber';
 import { processUpdateQueue, UpdateQueue } from './updateQueue';
-import { HostRoot, HostComponent, HostText } from './workTags';
+import {
+  HostRoot,
+  HostComponent,
+  HostText,
+  FunctionComponent,
+} from './workTags';
 import { mountChildFibers, reconcileChildFibers } from './childFiber';
+import { renderWithHooks } from './fiberHooks';
 
 // *递归中的递，比较当前fiber和子fiber，返回fiberNode
 // *只会标记结构变化相关的flag：移动 => Placement，删除 => ChildDeletion
@@ -16,6 +22,8 @@ export const beginWork = (wip: FiberNode) => {
     case HostText:
       // text文本为叶子节点，递归递到这里结束，开始completeWork
       return null;
+    case FunctionComponent:
+      return updateFunctionComponent(wip);
     default:
       if (__DEV__) {
         console.log('beginWork未实现的类型：', wip.tag);
@@ -26,6 +34,13 @@ export const beginWork = (wip: FiberNode) => {
 
   return null;
 };
+
+function updateFunctionComponent(wip: FiberNode) {
+  const nextChildren = renderWithHooks(wip);
+  reconcileChildren(wip, nextChildren);
+
+  return wip.child;
+}
 
 // * 计算最新状态 + 生成子fiber
 function updateHostRoot(wip: FiberNode) {

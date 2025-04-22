@@ -14,8 +14,8 @@ import { HostRoot } from './workTags';
 
 // *createRoot内部执行createContainer
 export function createContainer(container: Container) {
-  const hostRootFiber = new FiberNode(HostRoot, {}, null);
-  const root = new FiberRootNode(container, hostRootFiber);
+  const hostRootFiber = new FiberNode(HostRoot, {}, null); // init hostRootFiber
+  const root = new FiberRootNode(container, hostRootFiber); // init fiberRootNode，并建立与hostRootFiber的关联
 
   hostRootFiber.updateQueue = createUpdateQueue();
 
