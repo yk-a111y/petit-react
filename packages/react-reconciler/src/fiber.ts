@@ -20,8 +20,8 @@ export class FiberNode {
 
   // working unit attr
   pendingProps: Props; // *当前fiber的props
+  memoizedState: any; // *当前fiber的state，也存储FC的useHooks数组
   memoizedProps: Props | null; // *pendingProps处理后，赋值给memoizedProps
-  memoizedState: any;
   alternate: FiberNode | null;
 
   // effects
