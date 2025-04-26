@@ -45,6 +45,8 @@ function updateFunctionComponent(wip: FiberNode) {
 // * 计算最新状态 + 生成子fiber
 function updateHostRoot(wip: FiberNode) {
   const baseState = wip.memoizedState;
+
+  // * 取出更新队列中的更新，然后置为null
   const updateQueue = wip.updateQueue as UpdateQueue<Element>;
   const pending = updateQueue.shared.pending;
   updateQueue.shared.pending = null;

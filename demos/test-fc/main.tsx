@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
 
-const jsx = (
-  <div>
-    <div>child</div>
-  </div>
-);
+function App() {
+  const [count, setCount] = useState(100);
 
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(jsx);
+  return <div onClick={() => setCount(count + 1)}>{count}</div>;
+}
+
+ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+  <App />
+);

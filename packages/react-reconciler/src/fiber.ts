@@ -69,7 +69,7 @@ export class FiberRootNode {
 }
 
 export const createWorkInProgress = (
-  current: FiberNode,
+  current: FiberNode, // *hostRootFiber
   pendingProps: Props
 ): FiberNode => {
   let wip = current.alternate;
